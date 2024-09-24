@@ -13,7 +13,7 @@ padding-top: 10px;
 .button {
     
     border: none; 
-    color: white; 
+    color: rgb(14, 13, 13); 
     padding: 5px 10px;
     text-align: center;
     text-decoration: none;
@@ -34,7 +34,32 @@ text-decoration: none;
     padding: 10px;
 }
 
+.img {
+    width: 100px;
+    height:auto;
+    padding: 10px;
+}
+
+.castList {
+    list-style-type: none;
+}
+
 .largeText {
     font-size: 500;
     font-weight: 600;
 }
+
+.text {
+    margin: 0;
+    padding: 5px;
+}
+
+.linkButton {
+        background: none;
+        border: none;
+        color: blue;
+        text-decoration: underline;
+        cursor: pointer;
+        padding: 0;
+        font-size: inherit;
+      }
