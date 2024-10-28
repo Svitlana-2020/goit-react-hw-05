@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { fetchPage } from "../../api-page";
 import css from '../pages/MovieDetailsPage.module.css'
-import MovieCast from '../components/MovieCast'
-import MovieReviews from "../components/MovieReviews";
+// import MovieCast from '../components/MovieCast'
+// import MovieReviews from "../components/MovieReviews";
+
+const MovieCast = lazy(() => import('../components/MovieCast.jsx'))
+const MovieReviews = lazy(() => import('../components/MovieReviews.jsx'))
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
@@ -12,6 +15,7 @@ const MovieDetailsPage = () => {
   const [error, setError] = useState(false);
   const [showCast, setShowCast] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -95,15 +99,20 @@ const MovieDetailsPage = () => {
           </li>
         </ul>
         <div>
+        <Suspense fallback={<div>Loading subpage...</div>}>
+
         {showCast && <MovieCast credits={movieData.credits} />}
         {showReviews && <MovieReviews reviews={movieData.reviews} />}
         <Outlet />
+
+        </Suspense>
         </div>
       </div>
     </div>
     
   );
 };
+
 
 export default MovieDetailsPage;
 

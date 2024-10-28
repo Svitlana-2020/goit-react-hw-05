@@ -1,7 +1,47 @@
 import css from './MoviesPage.module.css'
-import MovieList from '../components/MovieList';
+// import MovieList from '../components/MovieList';
+import { useEffect, useState } from "react";
+import { fetchUrlTitle } from '../../api-search.js';
+import { lazy, Suspense } from 'react';
+const MovieList = lazy(() => import('../components/MovieList.jsx'))
 
-const MoviesPage = ({loading, error, movies, onSearch}) => {
+const MoviesPage = () => {
+
+    const [query, setQuery] = useState("");
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  
+  useEffect(() => {
+
+    if (!query) return;
+
+    async function getMoviesByTitle () {
+      try {
+        setLoading(true);
+      setError(false);
+      setQuery(query);
+      const data = await fetchUrlTitle(query);
+      console.log(data.results)
+      setMovies(data.results);
+        
+      } catch {
+        setError(true);
+      }
+    finally {
+      setLoading(false);
+    }
+    } getMoviesByTitle();
+
+}, [query])
+
+
+const handleSearch = (newQuery) => {
+  setQuery(newQuery)
+  // setMovies([])
+}
+
+
     const handleSubmit = (evt) => {
         evt.preventDefault();
         const form = evt.target;
@@ -9,7 +49,7 @@ const MoviesPage = ({loading, error, movies, onSearch}) => {
         if(form.elements.title.value.trim() === "") {
             alert("Please enter search term!")
             return;}
-        onSearch(title);
+        handleSearch(title);
         // form.reset();
 }
 
@@ -26,7 +66,9 @@ return (
    
     {loading && <p>Loading movies...</p>}
     {error && <p>Something went wrong, please try again.</p>}
+    <Suspense fallback={<p>Loading component...</p>}>
     {!loading && !error && <MovieList movies={movies} />}
+    </Suspense>
     </div>
 )
     }
