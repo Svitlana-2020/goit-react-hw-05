@@ -1,39 +1,43 @@
-import { useEffect, useState, lazy, Suspense } from "react";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState, Suspense, useRef } from "react";
+import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
 import { fetchPage } from "../../api-page";
 import css from '../pages/MovieDetailsPage.module.css'
+// import { useLocation } from 'react-router-dom';
 // import MovieCast from '../components/MovieCast'
 // import MovieReviews from "../components/MovieReviews";
 
-const MovieCast = lazy(() => import('../components/MovieCast.jsx'))
-const MovieReviews = lazy(() => import('../components/MovieReviews.jsx'))
+// const MovieCast = lazy(() => import('../components/MovieCast.jsx'))
+// const MovieReviews = lazy(() => import('../components/MovieReviews.jsx'))
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const [movieData, setMovieData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [showCast, setShowCast] = useState(false);
-  const [showReviews, setShowReviews] = useState(false);
+  // const [showCast, setShowCast] = useState(false);
+  // const [showReviews, setShowReviews] = useState(false);
 
 
   const navigate = useNavigate();
+  // const location = useLocation();
+  const prevList = useRef(location.state);
 
   const handleGoBack = () => {
     if (window.history.length > 1) {
-      navigate(-1); // Возвращает на предыдущую страницу
+      navigate(-1); 
     } else {
-      navigate("/movies"); // Если истории нет, отправляет на /movies
+      navigate(prevList); 
     }
   };
 
   useEffect(() => {
-    console.log(movieId);
+    // console.log(movieId);
     const getMovieDetails = async () => {
       try {
         setLoading(true);
         const data = await fetchPage(movieId); // Получение данных по movieId
         setMovieData(data);
+       
       } catch (err) {
         console.error("Ошибка при получении данных:", err);
         setError(true);
@@ -47,21 +51,6 @@ const MovieDetailsPage = () => {
 
    if (!movieData) {
     return <p>Loading...</p>;}
-      
-     
-    const handleToggleCast = () => {
-        // navigate('cast'); 
-          setShowCast(prevState => !prevState); // переключение состояния
-          setShowReviews(false);
-          console.log(movieId)
-        };
-       
-
-    const handleToggleReviews = () => {
-            setShowReviews(prevState => !prevState); // переключение состояния
-            setShowCast(false);
-            // navigate('review'); 
-          };
          
   return (
     <div>
@@ -86,26 +75,29 @@ const MovieDetailsPage = () => {
       </div>
       <div>
         <h2 className={css.text}>Additional information</h2>
-        <ul className={css.list}>
+        <Suspense fallback={<div>Loading page...</div>}>
+        <nav className={css.list}>
           <li className={css.item}>
-          <button onClick={handleToggleCast} className={css.linkButton}>
+          <NavLink to="cast" className={css.linkButton}>
             Cast
-            </button>
+            </NavLink>
           </li>
           <li className={css.item}>
-          <button onClick={handleToggleReviews} className={css.linkButton}>
+          <NavLink to="reviews" className={css.linkButton}>
           Reviews
-            </button>
+            </NavLink>
           </li>
-        </ul>
-        <div>
-        <Suspense fallback={<div>Loading subpage...</div>}>
-
-        {showCast && <MovieCast credits={movieData.credits} />}
-        {showReviews && <MovieReviews reviews={movieData.reviews} />}
+        </nav>
         <Outlet />
-
         </Suspense>
+        <div>
+        {/* <Suspense fallback={<div>Loading subpage...</div>}> */}
+
+        {/* {showCast && <MovieCast credits={movieData.credits} />}
+        {showReviews && <MovieReviews reviews={movieData.reviews} />} */}
+        {/* <Outlet /> */}
+
+        {/* </Suspense> */}
         </div>
       </div>
     </div>

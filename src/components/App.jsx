@@ -13,6 +13,7 @@ import Navigation from "./Navigation.jsx";
 // import { useEffect, useState } from 'react';
 // import { fetchUrlTitle } from '../../api-search.js';
 import { lazy, Suspense } from "react";
+import MovieList from './MovieList.jsx';
 // import urls from '../../urls.json'
 
 const HomePage = lazy(() => import('../pages/HomePage.jsx'))
@@ -31,6 +32,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/movies" element={<MoviesPage />} />
+        <Route path="/movies/query={query}" element={<MovieList />} />
         {/* <Route path="/movies/:movieId" element={<MovieDetailsPage />} /> */}
         <Route path="/movies/:movieId" element={<MovieDetailsPage />}>
         <Route path="cast" element={<MovieCast />} />

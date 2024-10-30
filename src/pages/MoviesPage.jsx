@@ -3,6 +3,7 @@ import css from './MoviesPage.module.css'
 import { useEffect, useState } from "react";
 import { fetchUrlTitle } from '../../api-search.js';
 import { lazy, Suspense } from 'react';
+import { useNavigate } from 'react-router-dom';
 const MovieList = lazy(() => import('../components/MovieList.jsx'))
 
 const MoviesPage = () => {
@@ -11,6 +12,7 @@ const MoviesPage = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const navigate = useNavigate ();
   
   useEffect(() => {
 
@@ -35,12 +37,16 @@ const MoviesPage = () => {
 
 }, [query])
 
+useEffect(() => {
+  if (query) {
+    navigate(`/movies/query=${query}`);
+  }
+}, [query, navigate]);
 
 const handleSearch = (newQuery) => {
   setQuery(newQuery)
   // setMovies([])
 }
-
 
     const handleSubmit = (evt) => {
         evt.preventDefault();

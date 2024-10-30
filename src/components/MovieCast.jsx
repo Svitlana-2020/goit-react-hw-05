@@ -1,6 +1,28 @@
 import css from '../pages/MovieDetailsPage.module.css'
+import {useParams, useState} from 'react-router-dom';
+import { useEffect } from 'react';
+import { fetchPage } from '../../api-page';
 
-const MovieCast = ({credits}) => {
+const MovieCast = () => {
+    // const location = useLocation();
+    // const credits = location.state.credits;
+    const { movieId } = useParams();
+    const [credits, setCredits] = useState([]);
+    const [error, setError] = useState(false);
+
+    useEffect(() => {
+        const loadCredits = async () => {
+            try {
+                const data = await fetchPage(movieId); 
+                setCredits(data.credits);
+            } catch (err) {
+                console.error(err);
+                setError(true);
+            }
+        };
+
+        loadCredits();
+    }, [movieId]);
    
     if (!credits.cast || credits.cast.length === 0) {
         return <p>No cast information available.</p>;}

@@ -25,7 +25,7 @@ const HomePage = () => {
         setError(true);
       }
     finally {
-      // setLoading(false);
+      setLoading(false);
     }}
   
     getMovies()
