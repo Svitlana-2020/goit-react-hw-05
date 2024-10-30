@@ -21,8 +21,8 @@ const HomePage = () => {
         setMovies(data.results);
         
       } 
-    catch {
-        setError(true);
+    catch (e) {
+        setError(e.message);
       }
     finally {
       setLoading(false);

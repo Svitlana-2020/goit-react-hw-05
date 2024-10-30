@@ -1,6 +1,6 @@
 import css from '../pages/MovieDetailsPage.module.css'
-import {useParams, useState} from 'react-router-dom';
-import { useEffect } from 'react';
+import {useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { fetchPage } from '../../api-page';
 
 const MovieReviews = () => {
@@ -14,8 +14,8 @@ const MovieReviews = () => {
         useEffect(() => {
             const loadReviews = async () => {
                 try {
-                    const data = await fetchPage(movieId); // используем API-функцию для загрузки данных
-                    setReviews(data.reviews);
+                    const { reviews } = await fetchPage(movieId); // используем API-функцию для загрузки данных
+                    setReviews(reviews.results);
                 } catch (err) {
                     console.error(err);
                     setError(true);

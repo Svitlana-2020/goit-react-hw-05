@@ -1,6 +1,6 @@
 import css from '../pages/MovieDetailsPage.module.css'
-import {useParams, useState} from 'react-router-dom';
-import { useEffect } from 'react';
+import {useParams} from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { fetchPage } from '../../api-page';
 
 const MovieCast = () => {
