@@ -1,52 +1,40 @@
 import css from './MoviesPage.module.css'
-// import MovieList from '../components/MovieList';
+import MovieList from '../components/MovieList';
 import { useEffect, useState } from "react";
 import { fetchUrlTitle } from '../../api-search.js';
-import { lazy, Suspense } from 'react';
-import { useNavigate } from 'react-router-dom';
-const MovieList = lazy(() => import('../components/MovieList.jsx'))
+// import { lazy, Suspense } from 'react';
+import { useSearchParams } from "react-router-dom";
+
+// const MovieList = lazy(() => import('../components/MovieList.jsx'))
 
 const MoviesPage = () => {
 
-    const [query, setQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const navigate = useNavigate ();
   
   useEffect(() => {
-
+    const query = searchParams.get("query");
     if (!query) return;
 
     async function getMoviesByTitle () {
       try {
         setLoading(true);
       setError(false);
-      setQuery(query);
       const data = await fetchUrlTitle(query);
       console.log(data.results)
       setMovies(data.results);
         
-      } catch {
-        setError(true);
+      } catch (e) {
+        setError(e.message);
       }
     finally {
       setLoading(false);
     }
     } getMoviesByTitle();
 
-}, [query])
-
-useEffect(() => {
-  if (query) {
-    navigate(`/movies/query=${query}`);
-  }
-}, [query, navigate]);
-
-const handleSearch = (newQuery) => {
-  setQuery(newQuery)
-  // setMovies([])
-}
+}, [searchParams])
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
@@ -55,7 +43,7 @@ const handleSearch = (newQuery) => {
         if(form.elements.title.value.trim() === "") {
             alert("Please enter search term!")
             return;}
-        handleSearch(title);
+            setSearchParams({ query: title });
         // form.reset();
 }
 
@@ -72,9 +60,7 @@ return (
    
     {loading && <p>Loading movies...</p>}
     {error && <p>Something went wrong, please try again.</p>}
-    <Suspense fallback={<p>Loading component...</p>}>
     {!loading && !error && <MovieList movies={movies} />}
-    </Suspense>
     </div>
 )
     }
